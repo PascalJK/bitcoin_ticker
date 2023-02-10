@@ -1,5 +1,5 @@
 import 'package:bitcoin_ticker/coin_data.dart';
-import 'package:bitcoin_ticker/widget/card_picker.dart';
+import 'package:bitcoin_ticker/widgets/card_picker.dart';
 import 'package:flutter/material.dart';
 
 class PriceScreen extends StatefulWidget {
