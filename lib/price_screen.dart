@@ -12,6 +12,7 @@ class PriceScreen extends StatefulWidget {
 class _PriceScreenState extends State<PriceScreen> {
   String selectedCrypto = cryptoList.first;
   String selectedCurrency = currenciesList.first;
+  double currencyValue = 0;
 
   List<DropdownMenuItem> createDropdownItems(List<String> list) {
     List<DropdownMenuItem> dropdownItems = [];
@@ -31,69 +32,55 @@ class _PriceScreenState extends State<PriceScreen> {
       appBar: AppBar(
         title: const Text('🤑 Coin Ticker'),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          const SizedBox(
-            height: 25,
-          ),
-          Row(
-            children: [
-              Icon(Icons.currency_bitcoin),
-              const Text("Crypto"),
-            ],
-          ),
-          CardPicker(
-            items: createDropdownItems(cryptoList),
-            selectedCurrency: selectedCrypto,
-            onCurrencySelected: (value) =>
-                setState(() => selectedCrypto = value),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Row(
-            children: [
-              Icon(Icons.currency_pound),
-              const Text("Currency"),
-            ],
-          ),
-          CardPicker(
-            items: createDropdownItems(currenciesList),
-            selectedCurrency: selectedCurrency,
-            onCurrencySelected: (value) =>
-                setState(() => selectedCurrency = value),
-          ),
-          const SizedBox(
-            height: 25,
-          ),
-          ElevatedButton(
-            onPressed: () {},
-            child: const Text("Get Rate"),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
-            child: Card(
-              color: Colors.lightBlueAccent,
-              elevation: 5.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+      body: Container(
+        margin: const EdgeInsets.only(left: 15, right: 15, top: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            const SizedBox(height: 25),
+            CardPicker(
+              title: "Crypto",
+              iconData: Icons.currency_bitcoin,
+              items: createDropdownItems(cryptoList),
+              selectedCurrency: selectedCrypto,
+              onCurrencySelected: (value) =>
+                  setState(() => selectedCrypto = value),
+            ),
+            const SizedBox(height: 20),
+            CardPicker(
+              title: "Currency",
+              iconData: Icons.currency_pound,
+              items: createDropdownItems(currenciesList),
+              selectedCurrency: selectedCurrency,
+              onCurrencySelected: (value) =>
+                  setState(() => selectedCurrency = value),
+            ),
+            const SizedBox(height: 25),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 35),
+              child: ElevatedButton(
+                onPressed: () {},
+                child: const Text("Get Rate"),
               ),
+            ),
+            Card(
+              margin: const EdgeInsets.symmetric(vertical: 10),
+              color: const Color(0xFFD5EFDD),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 15.0, horizontal: 28.0),
-                child: Text(
-                  '1 BTC = ? $selectedCurrency',
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 25),
+                child: Center(
+                  child: Text(
+                    "1 $selectedCrypto = $currencyValue $selectedCurrency",
+                    style: const TextStyle(
+                        fontSize: 20.0, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
