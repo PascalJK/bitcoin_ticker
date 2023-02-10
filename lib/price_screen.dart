@@ -1,4 +1,5 @@
 import 'package:bitcoin_ticker/coin_data.dart';
+import 'package:bitcoin_ticker/widget/card_picker.dart';
 import 'package:flutter/material.dart';
 
 class PriceScreen extends StatefulWidget {
@@ -9,11 +10,12 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
+  String selectedCrypto = cryptoList.first;
   String selectedCurrency = currenciesList.first;
 
-  List<DropdownMenuItem> getDropdownItems() {
+  List<DropdownMenuItem> createDropdownItems(List<String> list) {
     List<DropdownMenuItem> dropdownItems = [];
-    for (String c in currenciesList) {
+    for (String c in list) {
       var item = DropdownMenuItem(
         value: c,
         child: Text(c),
@@ -30,9 +32,45 @@ class _PriceScreenState extends State<PriceScreen> {
         title: const Text('🤑 Coin Ticker'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
+          const SizedBox(
+            height: 25,
+          ),
+          Row(
+            children: [
+              Icon(Icons.currency_bitcoin),
+              const Text("Crypto"),
+            ],
+          ),
+          CardPicker(
+            items: createDropdownItems(cryptoList),
+            selectedCurrency: selectedCrypto,
+            onCurrencySelected: (value) =>
+                setState(() => selectedCrypto = value),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Row(
+            children: [
+              Icon(Icons.currency_pound),
+              const Text("Currency"),
+            ],
+          ),
+          CardPicker(
+            items: createDropdownItems(currenciesList),
+            selectedCurrency: selectedCurrency,
+            onCurrencySelected: (value) =>
+                setState(() => selectedCurrency = value),
+          ),
+          const SizedBox(
+            height: 25,
+          ),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text("Get Rate"),
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(18.0, 18.0, 18.0, 0),
             child: Card(
@@ -53,22 +91,6 @@ class _PriceScreenState extends State<PriceScreen> {
                   ),
                 ),
               ),
-            ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            padding: const EdgeInsets.only(bottom: 10.0),
-            color: Colors.lightBlue,
-            child: DropdownButton(
-              menuMaxHeight: 300,
-              dropdownColor: Colors.lightBlue,
-              value: selectedCurrency,
-              items: getDropdownItems(),
-              onChanged: (value) {
-                setState(() {
-                  selectedCurrency = value;
-                });
-              },
             ),
           ),
         ],
