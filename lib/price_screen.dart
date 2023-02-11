@@ -1,6 +1,8 @@
 import 'package:bitcoin_ticker/coin_data.dart';
+import 'package:bitcoin_ticker/services/networking.dart';
 import 'package:bitcoin_ticker/widgets/card_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PriceScreen extends StatefulWidget {
   const PriceScreen({super.key});
@@ -26,11 +28,21 @@ class _PriceScreenState extends State<PriceScreen> {
     return dropdownItems;
   }
 
+  void getCurrencyData() async {
+    var data =
+        await ApiService.getCurrencyData(selectedCrypto, selectedCurrency);
+
+    if (data != null) {
+      setState(() => currencyValue = data["rate"]);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('🤑 Coin Ticker'),
+        centerTitle: true,
       ),
       body: Container(
         margin: const EdgeInsets.only(left: 15, right: 15, top: 10),
@@ -40,26 +52,30 @@ class _PriceScreenState extends State<PriceScreen> {
             const SizedBox(height: 25),
             CardPicker(
               title: "Crypto",
-              iconData: Icons.currency_bitcoin,
+              iconData: FontAwesomeIcons.bitcoinSign,
               items: createDropdownItems(cryptoList),
               selectedCurrency: selectedCrypto,
-              onCurrencySelected: (value) =>
-                  setState(() => selectedCrypto = value),
+              onCurrencySelected: (value) => setState(() {
+                selectedCrypto = value;
+                currencyValue = 0;
+              }),
             ),
             const SizedBox(height: 20),
             CardPicker(
               title: "Currency",
-              iconData: Icons.currency_pound,
+              iconData: FontAwesomeIcons.dollarSign,
               items: createDropdownItems(currenciesList),
               selectedCurrency: selectedCurrency,
-              onCurrencySelected: (value) =>
-                  setState(() => selectedCurrency = value),
+              onCurrencySelected: (value) => setState(() {
+                selectedCurrency = value;
+                currencyValue = 0;
+              }),
             ),
             const SizedBox(height: 25),
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 35),
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => getCurrencyData(),
                 child: const Text("Get Rate"),
               ),
             ),
@@ -72,7 +88,7 @@ class _PriceScreenState extends State<PriceScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 25),
                 child: Center(
                   child: Text(
-                    "1 $selectedCrypto = $currencyValue $selectedCurrency",
+                    "1 $selectedCrypto = ${currencyValue.toStringAsFixed(2)} $selectedCurrency",
                     style: const TextStyle(
                         fontSize: 20.0, fontWeight: FontWeight.w700),
                   ),
